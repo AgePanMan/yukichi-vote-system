@@ -1,7 +1,7 @@
 name: Deploy from ZIP
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # ← 手動実行トリガー
 
 jobs:
   unzip-and-push:
