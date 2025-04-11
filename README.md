@@ -407,3 +407,22 @@ return <h1>{t('welcome')}</h1>;
 - DAO参加者の一覧表示とCSV出力
 - 外部API連携（Chainlink 等）
 - 秘匿性を高めた匿名投票機能
+
+
+---
+
+### ♻️ Prisma操作のサービス層分離
+
+- DB操作はすべて `src/services/` 配下に移動
+- `proposalService.js`：提案のCRUD処理
+- `voteService.js`：投票登録と集計処理
+- APIからはサービス層を通じてDBアクセスを行います
+
+
+---
+
+### 🌐 APIエラーメッセージの多言語対応
+
+- `Accept-Language` ヘッダーを用いて `ja` / `en` のエラーメッセージを返却
+- 翻訳ファイル（`translation.json`）に `error` セクションを追加
+- サーバー側で `i18n.getFixedT(lang)` により翻訳文を取得して返却

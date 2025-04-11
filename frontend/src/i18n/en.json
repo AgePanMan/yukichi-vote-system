@@ -18,5 +18,30 @@
     "update": "Updates",
     "vote_started": "Voting has started",
     "vote_ended": "Voting has ended"
+  },
+  "error": {
+    "not_found": {
+      "proposal": "Proposal not found"
+    },
+    "required": {
+      "address": "Address is required"
+    },
+    "missing_fields": "Missing required fields",
+    "server": "Server error"
+  },
+  "ui": {
+    "success": {
+      "proposal_created": "Proposal successfully created",
+      "deleted": "Successfully deleted"
+    },
+    "confirm": {
+      "delete": "Are you sure you want to delete this?"
+    }
+  },
+  "validation": {
+    "required": {
+      "title": "Please enter a title",
+      "options": "Enter at least two options"
+    }
   }
 }

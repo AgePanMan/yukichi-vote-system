@@ -18,5 +18,30 @@
     "update": "更新情報",
     "vote_started": "投票が開始されました",
     "vote_ended": "投票が終了しました"
+  },
+  "error": {
+    "not_found": {
+      "proposal": "提案が見つかりません"
+    },
+    "required": {
+      "address": "アドレスは必須です"
+    },
+    "missing_fields": "必須項目が不足しています",
+    "server": "サーバーエラー"
+  },
+  "ui": {
+    "success": {
+      "proposal_created": "提案を作成しました",
+      "deleted": "削除しました"
+    },
+    "confirm": {
+      "delete": "本当に削除しますか？"
+    }
+  },
+  "validation": {
+    "required": {
+      "title": "タイトルを入力してください",
+      "options": "選択肢を2つ以上入力してください"
+    }
   }
 }
