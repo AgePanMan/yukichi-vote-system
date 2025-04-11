@@ -1,1 +1,47 @@
-// Prismaスキーマ（Proposal, Vote, TokenHolder, BannedUser など）
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Proposal {
+  id               Int      @id @default(autoincrement())
+  title            String
+  description      String
+  address          String
+  startTime        DateTime
+  endTime          DateTime
+  options          String
+  strategy         String
+  includeUnclaimed Boolean
+  createdAt        DateTime @default(now())
+  votes            Vote[]
+}
+
+model Vote {
+  id         Int      @id @default(autoincrement())
+  voter      String
+  option     String
+  weight     Int
+  proposal   Proposal @relation(fields: [proposalId], references: [id])
+  proposalId Int
+}
+
+model TokenHolder {
+  id            Int      @id @default(autoincrement())
+  holderAddress String
+  tokenAddress  String
+  balance       String
+  snapshotAt    DateTime
+  @@unique([holderAddress, tokenAddress], name: "holderAddress_tokenAddress")
+}
+
+model BannedUser {
+  id       Int      @id @default(autoincrement())
+  address  String   @unique
+  reason   String
+  bannedAt DateTime @default(now())
+}
