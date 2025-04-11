@@ -1,428 +1,279 @@
-# 🎉 yukichi-vote-system
+# 🗳️ yukichi-vote-system
 
-OASYSブロックチェーン対応の分散型投票システムです。  
-提案の作成、ウォレット接続による投票、リアルタイムな投票集計、BAN管理機能など、DAOプラットフォームとして必要な要素をすべて含んだテンプレートです。
+[![Deploy from ZIP](https://github.com/AgePanMan/yukichi-vote-system/actions/workflows/deploy-from-zip.yml/badge.svg)](https://github.com/AgePanMan/yukichi-vote-system/actions/workflows/deploy-from-zip.yml)
+
+分散型投票をサポートする Web3 対応の投票システムです。提案作成、ウォレット接続、トークン保有量による投票、集計、管理など多機能を搭載。
 
 ---
 
-## 🚀 初心者向けセットアップ手順
+## 🚀 機能一覧
 
-### ✅ 1. このプロジェクトの準備
+- ✅ 提案作成 / 投票 / 集計
+- 📊 グラフ・ランキング形式の投票結果表示
+- 🌍 多言語対応（日本語 / 英語）
+- 🔒 管理者認証 + ロール管理（admin/user）
+- 📄 通知投稿・BANユーザー管理
+- 📝 アクセスログ（DB + UI + 検索 + CSV出力）
+- 📅 ロードマップ公開 (`/roadmap`)
+- 💬 コメント・投票UIの国際対応
+- 🛠 GitHub Actions CI + Discord 通知連携
+- 🐛 Issueテンプレート・PRテンプレート・Auto Assign 対応
 
-このzipファイルをダウンロード・解凍してください。
+---
+
+## 📦 導入手順
+
+### 1. クローン
+
+```bash
+git clone git@github.com:AgePanMan/yukichi-vote-system.git
+cd yukichi-vote-system
+```
+
+### 2. `.env` 設定
+
+```bash
+cp .env.template .env
+# DISCORD_WEBHOOK_URL をセット（オプション）
+```
+
+### 3. 開発環境起動
+
+```bash
+docker-compose up --build
+```
+
+- フロントエンド: http://localhost:3000
+- バックエンド: http://localhost:3001
+
+---
+
+## 🧪 GitHub Actions CI
+
+- `Deploy from ZIP` ワークフローでZIPアーカイブを展開 & 自動Push
+- 成功時に Discord 通知が届くよう設定
+- PR作成時に自動で作成者をAssigneeに設定（Auto Assign）
+
+---
+
+## 📂 ディレクトリ構成（概要）
 
 ```
 yukichi-vote-system/
-├── frontend/      # フロントエンド (React + TailwindCSS)
-├── backend/       # バックエンド (Express + Prisma)
-└── README.md      # このファイル
+├── frontend/              # React + Tailwind フロント
+├── backend/               # Express + Prisma バックエンド
+├── .github/               # GitHub Actions / テンプレート
+│   ├── workflows/
+│   ├── ISSUE_TEMPLATE/
+│   └── PULL_REQUEST_TEMPLATE.md
+├── .env.template          # 環境変数テンプレート
+└── docker-compose.yml
 ```
 
 ---
 
-### ✅ 2. 必要なツールをインストール
+## 🧩 コントリビューション
 
-パソコンに以下がインストールされていることを確認してください：
+- PR時はテンプレートに沿って記載してください
+- コミットは Conventional Commits 準拠でお願いします
 
-- **Node.js**（https://nodejs.org/ja）
-- **npm**（Node.jsを入れると一緒に付きます）
-- 任意：**MetaMask拡張機能**（https://metamask.io）
+例:
+```
+feat: 投票結果を円グラフで可視化
+```
 
 ---
 
-### ✅ 3. フロントエンドの起動（React）
+## 📌 ライセンス
+
+MIT
+
+
+---
+
+## 🖼️ デモ＆スクリーンショット
+
+### 💻 提案作成画面
+![Proposal Form](./docs/screenshots/proposal-form.png)
+
+### 📊 投票結果（円グラフ＋ランキング）
+![Vote Result Graph](./docs/screenshots/vote-graph.png)
+
+### 🎞️ 操作GIF（投票フロー）
+![Voting Demo](./docs/screenshots/vote-flow.gif)
+
+---
+
+## 🌐 デモサイト
+
+> ※ ログインは任意のウォレットアドレスで操作可能です（署名不要）
+
+🔗 https://yukichi-demo.vercel.app/
+
+---
+
+
+---
+
+## ♻️ PM2 起動設定（ecosystem.config.js）
+
+バックエンドは PM2 を使ってプロセス管理を行います。
+
+`ecosystem.config.js` に定義済み：
 
 ```bash
-cd yukichi-vote-system/frontend
-npm install
-npm start
+# 開発環境起動
+pm2 start ecosystem.config.js --env development
+
+# 本番環境起動
+pm2 start ecosystem.config.js --env production
 ```
 
-その後、ブラウザで `http://localhost:3000` にアクセスしてください。
+バックエンドのエントリーポイント： `./backend/src/server.js`
 
 ---
 
-### ✅ 4. バックエンドの起動（Express + Prisma）
+## 🚀 デプロイスクリプト（ConoHa VPS向け）
+
+本番環境では `deploy.sh` を使ってデプロイ操作を簡略化できます：
 
 ```bash
-cd ../backend
-npm install
-npx prisma migrate dev --name init
-npx prisma generate
-node server.js
+./deploy.sh
 ```
 
-サーバーが `http://localhost:3001` で起動します。
+実行内容：
+
+- `git pull`（mainブランチの更新を取得）
+- `npm install`（バックエンドの依存インストール）
+- `pm2 restart` による再起動
 
 ---
 
-### ✅ 5. 環境変数ファイル（backend/.env）
+## 🛡️ PM2 永続化（systemd連携）
 
-```env
-NODE_ENV=development
-PORT=3001
-DATABASE_URL="file:./dev.db"
-OASYS_RPC_URL="https://your-oasys-node.example"  # 自分のRPC URLを指定
-JWT_SECRET="your-secret"
-CORS_ORIGIN=http://localhost:3000
-```
-
----
-
-## 📦 機能一覧
-
-- ✅ トークンベースの投票システム（提案＋投票）
-- ✅ ウォレット接続（ethers.js）
-- ✅ 投票方式：1アドレス1票 or 保有量比例
-- ✅ 投票集計のリアルタイム表示
-- ✅ 提案履歴 / 投票履歴の表示
-- ✅ BANユーザー管理
-- ✅ スナップショット / 未Claim対応
-- ✅ お知らせ一覧
-
----
-
-## 📚 補足
-
-- DBは開発中は `SQLite` を使用しています（`dev.db`）。
-- 本番環境では `PostgreSQL` をおすすめします。
-- デプロイは `Vercel`（frontend）、`Render` や `Railway`（backend）などが便利です。
-
----
-
-## 🙋 サポート
-
-使い方がわからない時やエラーが出たときは、以下をチェック：
-
-- `npm install` を忘れていないか？
-- `.env` の `DATABASE_URL` や `OASYS_RPC_URL` は正しく設定したか？
-- MetaMask でウォレット接続できているか？
-
----
-
-お気軽にカスタマイズ＆拡張してください 🚀
-
-
----
-
-## 📘 APIドキュメント
-
-### 🔍 Swagger UIで確認
-
-起動後、以下のURLからAPI仕様を確認できます：
-
-[http://localhost:3001/api-docs](http://localhost:3001/api-docs)
-
-### 📦 使用ライブラリ
-
-- `swagger-jsdoc`
-- `swagger-ui-express`
-
-
----
-
-## ☁️ フロントエンド自動デプロイ（Vercel）
-
-### ✅ 設定手順
-
-1. [Vercel](https://vercel.com/) に GitHub アカウントでログイン
-2. 「Import Git Repository」→ `yukichi-vote-system` を選択
-3. プロジェクト設定：
-   - Root Directory: `frontend`
-   - Build Command: `npm run build`
-   - Output Directory: `build`
-4. GitHub に Push すると自動でデプロイされます 🚀
-
-### 🌐 デプロイ先 URL
-
-初回デプロイ後、Vercel ダッシュボードから確認できます。
-
-
----
-
-## 🧪 テスト（Jest + Supertest）
-
-### 📦 インストール
+サーバー再起動後も PM2 を自動で復元するには以下のコマンドを一度実行します：
 
 ```bash
-cd backend
-npm install --save-dev jest supertest
+pm2 startup
+pm2 save
 ```
 
-### 🚀 テスト実行
+これにより `ecosystem.config.js` のプロセスが systemd に登録され、自動起動されるようになります。
+
+---
+
+## 🔔 PM2 ログ監視（Discord通知）
+
+定期的に PM2 のログを確認し、`Error` や `Unhandled` を検出したら Discord に通知します。
+
+`scripts/log-watch.js` を cron などで実行してください：
 
 ```bash
-npx jest
+*/5 * * * * /usr/bin/node /path/to/yukichi-vote-system/scripts/log-watch.js >> /var/log/yukichi-monitor.log 2>&1
 ```
 
-### 📁 テスト対象
-
-- `/api/proposals` 提案作成・取得・投票・集計の動作確認
-- ステータスコード / レスポンス形式の検証
-- Jest設定: `backend/jest.config.js`
-
-
-### 🔁 CI自動テスト
-
-GitHub Actions (`ci.yml`) にて、以下のテストも実行されます：
-
-- Jest + Supertest によるバックエンド API テスト
-- `/backend/tests/` にテストケースを記述
-- CI上でも `npx jest` にて実行
-
+Webhook は `.env` の `DISCORD_WEBHOOK_URL` を使用します。
 
 ---
 
-## 🐳 Dockerによる起動
+## 🔐 サーバーセキュリティ設定（UFW + fail2ban）
 
-### ✅ 必要なツール
-- Docker
-- Docker Compose
+本番VPSでは以下のセキュリティ強化設定を行うことを推奨します：
 
-### 🔧 起動方法
+### ✅ UFW（ファイアウォール）
 
 ```bash
-docker-compose build
-docker-compose up
+sudo apt update
+sudo apt install ufw
+sudo ufw allow OpenSSH
+sudo ufw allow 80
+sudo ufw allow 443
+sudo ufw allow 3000
+sudo ufw allow 3001
+sudo ufw enable
+sudo ufw status
 ```
 
-アクセス先：
-- フロントエンド → http://localhost:3000
-- バックエンド → http://localhost:3001
+### 🚫 fail2ban（SSHアタック防御）
 
-
----
-
-## ✅ CIでのDocker + Jestテスト統合
-
-`.github/workflows/test.yml` にて以下が自動実行されます：
-
-- PostgreSQLコンテナをセットアップ
-- Prismaスキーマを読み込み
-- JestでAPIテストを実行
-
-
----
-
-## 📂 推奨コード構成（コード分割）
-
-本プロジェクトは中規模化を見据え、以下のようにコードを分割しています：
-
-### frontend/
-- `components/`: 再利用可能なUI部品（例：Button）
-- `hooks/`: カスタムフック（例：useFetch）
-- `services/`: API呼び出しラッパー
-- `utils/`: 汎用フォーマッタや関数群
-
-### backend/
-- `controllers/`: ビジネスロジック処理（例：proposalController）
-- `services/`: DB・ブロックチェーン連携など
-- `api/`: ルーティング層で controller を呼び出し
-
-
----
-
-## 🌍 多言語対応（i18n）
-
-### ✅ 使用ライブラリ
-
-- `react-i18next`
-- `i18next`
-
-### 📂 翻訳ファイル
-
-- `src/i18n/en.json`
-- `src/i18n/ja.json`
-
-### 📦 初期化ファイル
-
-```js
-import './i18n';
+```bash
+sudo apt install fail2ban
+sudo systemctl enable fail2ban
+sudo systemctl start fail2ban
+sudo fail2ban-client status
+sudo fail2ban-client status sshd
 ```
 
-### 使用例（翻訳）
+これらにより、サーバーの攻撃面を最小限に抑えられます。
 
-```js
-const { t } = useTranslation();
-return <h1>{t('welcome')}</h1>;
+---
+
+## 🌐 HTTPS構成（Nginx + Let’s Encrypt）
+
+本番環境では Nginx を使用してリバースプロキシとHTTPS化を構成します。
+
+### ✅ リバースプロキシ
+
+- `/` は localhost:3000（フロントエンド）
+- `/api` は localhost:3001（バックエンドAPI）
+
+`.nginx/yukichi.conf` にテンプレートあり：
+
+```bash
+sudo cp .nginx/yukichi.conf /etc/nginx/sites-available/yukichi
+sudo ln -s /etc/nginx/sites-available/yukichi /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
 ```
 
+### 🔒 HTTPS（無料SSL）
+
+```bash
+sudo apt install certbot python3-certbot-nginx
+sudo certbot --nginx -d yukichi.fun -d www.yukichi.fun
+```
+
+更新は自動設定されますが、確認用に以下を定期実行：
+
+```bash
+sudo certbot renew --dry-run
+```
 
 ---
 
-## 🌐 国際対応の強化
+## 🔄 GitHub Webhook 自動デプロイ
 
-### 🌍 言語切り替え
+GitHub の Push に応じて `deploy.sh` を自動実行する構成です。
 
-- ユーザーが日本語 / 英語を `<select>` で即時切り替え可能
-- `LanguageSwitcher.js` コンポーネントを利用
-- `i18n.changeLanguage(lng)` で即時反映
+1. GitHubリポジトリ > Settings > Webhooks > Add webhook
+   - Payload URL: `http://<YOUR_VPS_IP>:4000/webhook`
+   - Content type: `application/json`
+   - イベント: `Just the push event.`
 
-### 🗓 日付フォーマットのローカライズ
+2. サーバー上で `scripts/webhook-server.js` を起動：
 
-- `utils/formatDate.js` を `Intl.DateTimeFormat` ベースに変更
-- 現在の言語設定に基づき `Apr 11, 2025` / `2025年4月11日` のように表示形式を切替
+```bash
+pm2 start scripts/webhook-server.js --name webhook
+pm2 save
+```
 
-
-### 💴 通貨フォーマット対応
-
-- `utils/formatCurrency.js` にて `Intl.NumberFormat` を使用
-- 言語に応じて `¥1,000` や `$10.00` と表示を切り替え
-
-### 🌐 ブラウザ初期言語の自動適用
-
-- `navigator.language` に基づいて初期言語を `ja` or `en` に自動設定
-
+3. 以後は `git push` するだけで ConoHa VPS が自動更新されます。
 
 ---
 
-### 🧩 翻訳キー構造の最適化
+## 🧹 PM2ログの自動ローテーション
 
-- `proposal.title` や `common.vote` のようにカテゴリ + キー形式を採用
-- 機能・画面単位で翻訳整理がしやすくなり、メンテナンス性が向上
-- 翻訳ファイル：`i18n/ja.json`, `i18n/en.json` に構造化済
+バックエンドプロセスのログファイル肥大化を防ぐため、`pm2-logrotate` モジュールを導入します：
 
+```bash
+pm2 install pm2-logrotate
+pm2 set pm2-logrotate:max_size 10M
+pm2 set pm2-logrotate:retain 7
+pm2 set pm2-logrotate:interval 1d
+```
 
----
+設定内容は以下で確認できます：
 
-### 🌐 非同期翻訳ロード（i18next-http-backend）
-
-- `i18next-http-backend` を使用し、翻訳ファイルを `public/locales/{lng}/translation.json` からロード
-- 多言語数が増えても初期表示速度を維持
-- `i18n/index.js` にて `.use(HttpBackend)` により設定済み
-
-
----
-
-## 🛠 管理者画面（Admin Dashboard）
-
-- `/admin` ダッシュボード画面から、以下の管理操作が可能です：
-  - `/admin/ban-users`：ユーザーのBAN実行フォーム
-  - `/admin/proposals`：提案の一覧と状態表示
-- 管理画面のUIは `frontend/src/pages/admin/` 以下に構成されています
-
-
----
-
-## 🔐 管理者認証（MetaMask署名 + ホワイトリスト）
-
-- 管理者ウォレットでログイン（署名不要のアドレス認証）
-- `/admin` 配下のページは `AdminGate` によって保護されます
-- サーバー側は `.env` の `ADMIN_WALLETS` によってアドレス検証を行います
-- 管理者かどうかを確認するための `/api/admin/check` API を実装済み
-
-
----
-
-### 🗑 提案削除（管理者機能）
-
-- `/admin/proposals` 提案一覧に「削除」ボタンを追加
-- バックエンドに `DELETE /api/proposals/:id` を実装（`adminOnly` ミドルウェアで保護）
-- 削除時には投票データも同時に削除されます
-
-
----
-
-### 📣 通知送信（管理者機能）
-
-- `/admin/notifications` 画面から通知の投稿が可能に
-- POST `/api/notifications` にて通知メッセージを送信
-- バックエンドはメモリ上の `noticeStore` に格納（将来的にDB化可能）
-- `adminOnly` ミドルウェアで保護済み
-
-
----
-
-### 📊 監視ダッシュボード（管理者機能）
-
-- `/admin/overview` にてシステム内のサマリ情報を表示
-- 表示内容：
-  - 登録された提案数
-  - 総投票数
-  - BANされたユーザー数
-- API: `GET /api/admin/summary`（Prismaの集計関数を使用）
-
-
----
-
-## 📝 アクセスログ
-
-- 管理者の操作（提案削除・通知投稿・BANなど）をログファイルに記録
-- ログ内容：タイムスタンプ・操作種別・実行アドレス・詳細
-- 保存先：`logs/access.log`
-- ロガー関数：`logAccess()` は `src/log/accessLogger.js` に実装
-
-
----
-
-### 🗂 アクセスログのDB化 + 管理者UI
-
-- `AccessLog` モデルを追加し、すべてのログをDBに保存
-- `/admin/logs` 画面にてログを確認可能（降順表示）
-- 項目：アドレス / アクション / 内容 / 日時
-- 最大100件の最新ログを表示
-
-
----
-
-### 🔍 アクセスログ検索機能
-
-- 管理者ログ画面 `/admin/logs` にてアドレス・アクション名でのキーワード検索が可能
-- キーワードは大文字小文字を区別せず部分一致
-
-
----
-
-### 📤 アクセスログのCSVエクスポート
-
-- フィルタ済みログを「access-logs.csv」としてダウンロード可能
-- CSV形式：timestamp, address, action, detail
-
-
----
-
-### 👥 ロール管理（管理者 / 一般ユーザー）
-
-- Prismaに `User` モデルを追加（address + role）
-- デフォルトでは role: "user"、必要に応じてDB上で "admin" に更新
-- フロントでは `UserContext` にてアドレスとロールを取得
-- API側では `adminOnly` ミドルウェアが role="admin" のみ許可
-
-
----
-
-## 🗺 開発ロードマップ（優先度順）
-
-### 🚀 High Priority
-- 投票結果のCSVエクスポート
-- グラフによる投票集計表示
-- スマホ対応のレスポンシブ最適化
-
-### 🟡 Medium Priority
-- 提案へのコメント機能
-- 提案スケジューリング（開始・終了予約）
-- 提案カレンダーUI（可視化）
-
-### 🔵 Low Priority
-- DAO参加者の一覧表示とCSV出力
-- 外部API連携（Chainlink 等）
-- 秘匿性を高めた匿名投票機能
-
-
----
-
-### ♻️ Prisma操作のサービス層分離
-
-- DB操作はすべて `src/services/` 配下に移動
-- `proposalService.js`：提案のCRUD処理
-- `voteService.js`：投票登録と集計処理
-- APIからはサービス層を通じてDBアクセスを行います
-
-
----
-
-### 🌐 APIエラーメッセージの多言語対応
-
-- `Accept-Language` ヘッダーを用いて `ja` / `en` のエラーメッセージを返却
-- 翻訳ファイル（`translation.json`）に `error` セクションを追加
-- サーバー側で `i18n.getFixedT(lang)` により翻訳文を取得して返却
+```bash
+pm2 conf
+```
