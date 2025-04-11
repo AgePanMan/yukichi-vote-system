@@ -1,5 +1,14 @@
-// ...既存コード...
+const express = require('express');
+const router = express.Router();
+const adminOnly = require('../middleware/adminOnly');
 const { logAccess } = require('../log/accessLogger');
+
+// 通知の保存先（メモリ）
+const noticeStore = [];
+
+router.get('/', (req, res) => {
+  res.json(noticeStore);
+});
 
 router.post('/', adminOnly, (req, res) => {
   const { type, message } = req.body;
@@ -15,3 +24,5 @@ router.post('/', adminOnly, (req, res) => {
   logAccess({ action: 'sendNotification', address: req.body.address || 'unknown', detail: { type, message } });
   res.json({ success: true });
 });
+
+module.exports = router;
