@@ -1,15 +1,17 @@
-const express = require('express');
-const router = express.Router();
+// ...既存コード...
+const { logAccess } = require('../log/accessLogger');
 
-// モック通知データ（将来的にDB化予定）
-const mockNotices = [
-  { type: '投票終了', message: '「開発ロードマップ提案」が終了しました。', timestamp: Date.now() - 86400000 },
-  { type: '投票開始', message: '「DAO運営費用の使用」に投票できます。', timestamp: Date.now() - 3600000 },
-  { type: 'お知らせ', message: '未Claim投票の仕様をアップデートしました。', timestamp: Date.now() },
-];
-
-router.get('/', (req, res) => {
-  res.json(mockNotices);
+router.post('/', adminOnly, (req, res) => {
+  const { type, message } = req.body;
+  if (!type || !message) {
+    return res.status(400).json({ error: 'typeとmessageは必須です' });
+  }
+  const newNotice = {
+    type,
+    message,
+    timestamp: Date.now()
+  };
+  noticeStore.unshift(newNotice);
+  logAccess({ action: 'sendNotification', address: req.body.address || 'unknown', detail: { type, message } });
+  res.json({ success: true });
 });
-
-module.exports = router;

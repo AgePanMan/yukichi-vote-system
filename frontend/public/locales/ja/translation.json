@@ -1,0 +1,22 @@
+{
+  "common": {
+    "vote": "投票する",
+    "create": "作成",
+    "cancel": "キャンセル"
+  },
+  "proposal": {
+    "title": "提案タイトル",
+    "description": "説明文",
+    "start": "開始日時",
+    "end": "終了日時"
+  },
+  "user": {
+    "profile": "プロフィール",
+    "history": "履歴"
+  },
+  "notification": {
+    "update": "更新情報",
+    "vote_started": "投票が開始されました",
+    "vote_ended": "投票が終了しました"
+  }
+}

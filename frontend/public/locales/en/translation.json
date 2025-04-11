@@ -1,0 +1,22 @@
+{
+  "common": {
+    "vote": "Vote",
+    "create": "Create",
+    "cancel": "Cancel"
+  },
+  "proposal": {
+    "title": "Proposal Title",
+    "description": "Description",
+    "start": "Start Date",
+    "end": "End Date"
+  },
+  "user": {
+    "profile": "Profile",
+    "history": "History"
+  },
+  "notification": {
+    "update": "Updates",
+    "vote_started": "Voting has started",
+    "vote_ended": "Voting has ended"
+  }
+}
